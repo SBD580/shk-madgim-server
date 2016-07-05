@@ -13,10 +13,6 @@
 - [naturalearth] has some high resolution vector maps layers
 - [tessera] is a node server for serving tiles out of mbtiles file
 
-### notes
-
-- current version uses v3 of d3, while the last stable is v4
-
 [//]:#
 
 [shk-madgim-client]: <http://https://github.com/SBD580/shk-madgim-client>
