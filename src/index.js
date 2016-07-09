@@ -17,7 +17,6 @@ var port = args[1] || 8888;
 
 // git hooks support
 gith({
-    ref: 'refs/heads/master'
 }).on('all', function (payload) {
     console.info('Receive post-update event, pulling...');
 
