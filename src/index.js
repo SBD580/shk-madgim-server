@@ -18,23 +18,30 @@ var port = args[1] || 8888;
 // git hooks support
 gith({
 	ref: 'refs/heads/master'
-}).on('all',function(){
+}).on('all',function(payload){
 	console.info('Receive post-update event, pulling...');
-	gitpull(clientLocation,function(err,out){
-		if(err)
-			console.error('failed pulling directory '+clientLocation,err,out);
-		else
-			console.info('pulled directory '+clientLocation+' successfully');
-	});
-	exec('npm install',{cwd:clientLocation});
 
-	gitpull(__dirname,function(err,out){
-		if(err)
-			console.error('failed pulling directory '+__dirname,err,out);
-		else
-			console.info('pulled directory '+__dirname+' successfully');
-	});
-	exec('npm install',{cwd:__dirname});
+	if(payload.repository=='SBD580/shk-madgim-client') {
+		gitpull(clientLocation, function (err, out) {
+			if (err)
+				console.error('failed pulling directory ' + clientLocation, err, out);
+			else
+				console.info('pulled directory ' + clientLocation + ' successfully');
+		});
+		exec('npm install', {cwd: clientLocation});
+	}
+
+	if(payload.repository=='SBD580/shk-madgim-server') {
+		gitpull(__dirname, function (err, out) {
+			if (err)
+				console.error('failed pulling directory ' + __dirname, err, out);
+			else
+				console.info('pulled directory ' + __dirname + ' successfully');
+		});
+		exec('npm install', {cwd: __dirname},function(){
+			process.exit(0);
+		});
+	}
 });
 
 var app = express();
