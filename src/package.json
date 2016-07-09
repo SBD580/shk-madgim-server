@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/SBD580/shk-madgim-server#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "git-pull": "^0.1.0",
+    "gith": "^1.0.4"
   }
 }

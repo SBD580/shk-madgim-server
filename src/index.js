@@ -1,4 +1,6 @@
 var express = require('express');
+var gith = require('gith').create(9001);
+var gitpull = require('git-pull')
 
 var args = process.argv.slice(2);
 
@@ -11,6 +13,20 @@ if(!clientLocation){
 
 // get server port
 var port = args[1] || 8888;
+
+// git hooks support
+gith({
+	repo: 'SBD580/shk-madgim-server',
+	branch: 'master'
+}).on('all',function(){
+	console.info('Receive post-update event, pulling...');
+	gitpull(__dirname,function(err,out){
+		if(err)
+			console.error('failed pulling directory',err,out);
+		else
+			console.info('pulled successfully');
+	});
+});
 
 var app = express();
 
