@@ -22,9 +22,15 @@ gith({
 	console.info('Receive post-update event, pulling...');
 	gitpull(__dirname,function(err,out){
 		if(err)
-			console.error('failed pulling directory',err,out);
+			console.error('failed pulling directory '+__dirname,err,out);
 		else
-			console.info('pulled successfully');
+			console.info('pulled directory '+__dirname+' successfully');
+	});
+	gitpull(clientLocation,function(err,out){
+		if(err)
+			console.error('failed pulling directory '+clientLocation,err,out);
+		else
+			console.info('pulled directory '+clientLocation+' successfully');
 	});
 });
 
