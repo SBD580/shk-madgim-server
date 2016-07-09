@@ -1,6 +1,4 @@
 var express = require('express');
-var githooked = require('githooked');
-var exec = require('child_process').exec;
 
 var args = process.argv.slice(2);
 
@@ -13,39 +11,6 @@ if (!clientLocation) {
 
 // get server port
 var port = args[1] || 8888;
-
-// git hooks support
-githooked('refs/heads/master', function (payload) {
-    console.info('Receive post-update event, pulling...');
-
-    if (payload.repository.name == 'shk-madgim-client') {
-        console.info('pulling and installing client...');
-        exec('git pull && npm install', {cwd: clientLocation}, function (err, stdout, stderr) {
-            if (err) {
-                console.error('failed pulling and installing client', err);
-            } else {
-                console.info('client pulled and installed successfully');
-            }
-
-            console.info('STDOUT:',stdout);
-            console.info('STDERR:',stderr);
-        });
-    }
-
-    if (payload.repository.name == 'shk-madgim-server') {
-        console.info('pulling and installing app...');
-        exec('git pull && npm install', {cwd: __dirname}, function (err, stdout, stderr) {
-            if (err) {
-                console.error('failed pulling and installing app', err);
-            } else {
-                console.info('app pulled and installed successfully');
-            }
-
-            console.info('STDOUT:',stdout);
-            console.info('STDERR:',stderr);
-        });
-    }
-}).listen(9001);
 
 var app = express();
 
