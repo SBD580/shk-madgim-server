@@ -15,31 +15,27 @@ if (!clientLocation) {
 var port = args[1] || 8888;
 
 // git hooks support
-githooked('refs/heads/master',function(payload){
+githooked('refs/heads/master', function (payload) {
     console.info('Receive post-update event, pulling...');
 
     if (payload.repository.name == 'shk-madgim-client') {
-        gitpull(clientLocation, function (err, out) {
+        console.info('pulling and installing client...');
+        exec('git pull && npm install', {cwd: clientLocation}, function (err, stdout, stderr) {
             if (err) {
-                console.error('failed pulling directory ' + clientLocation, err, out);
+                console.error('failed pulling and installing client', err, stderr);
             } else {
-                console.info('pulled directory ' + clientLocation + ' successfully');
-                console.info('installing client...');
-                exec('npm install', {cwd: clientLocation});
+                console.info('client pulled and installed successfully', stdout);
             }
         });
     }
 
     if (payload.repository.name == 'shk-madgim-server') {
-        gitpull(__dirname, function (err, out) {
+        console.info('pulling and installing app...');
+        exec('git pull && npm install', {cwd: __dirname}, function (err, stdout, stderr) {
             if (err) {
-                console.error('failed pulling directory ' + __dirname, err, out);
+                console.error('failed pulling and installing app', err, stderr);
             } else {
-                console.info('pulled directory ' + __dirname + ' successfully');
-                console.info('installing app...');
-                exec('npm install', {cwd: __dirname},function(){
-                    process.exit(0);
-                });
+                console.info('app pulled and installed successfully', stdout);
             }
         });
     }
