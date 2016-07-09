@@ -16,7 +16,6 @@ var port = args[1] || 8888;
 
 // git hooks support
 gith({
-	repo: 'SBD580/shk-madgim-server',
 	branch: 'master'
 }).on('all',function(){
 	console.info('Receive post-update event, pulling...');
