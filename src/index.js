@@ -1,6 +1,5 @@
 var express = require('express');
-var gith = require('gith').create(9001);
-var gitpull = require('git-pull')
+var githooked = require('githooked');
 var exec = require('child_process').exec;
 
 var args = process.argv.slice(2);
@@ -16,11 +15,10 @@ if (!clientLocation) {
 var port = args[1] || 8888;
 
 // git hooks support
-gith({
-}).on('all', function (payload) {
+githooked('refs/heads/master',function(payload){
     console.info('Receive post-update event, pulling...');
 
-    if (payload.repository == 'SBD580/shk-madgim-client') {
+    if (payload.repository.name == 'shk-madgim-client') {
         gitpull(clientLocation, function (err, out) {
             if (err) {
                 console.error('failed pulling directory ' + clientLocation, err, out);
@@ -32,7 +30,7 @@ gith({
         });
     }
 
-    if (payload.repository == 'SBD580/shk-madgim-server') {
+    if (payload.repository.name == 'shk-madgim-server') {
         gitpull(__dirname, function (err, out) {
             if (err) {
                 console.error('failed pulling directory ' + __dirname, err, out);
@@ -45,7 +43,7 @@ gith({
             }
         });
     }
-});
+}).listen(9001);
 
 var app = express();
 
