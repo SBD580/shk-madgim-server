@@ -22,10 +22,13 @@ githooked('refs/heads/master', function (payload) {
         console.info('pulling and installing client...');
         exec('git pull && npm install', {cwd: clientLocation}, function (err, stdout, stderr) {
             if (err) {
-                console.error('failed pulling and installing client', err, stderr);
+                console.error('failed pulling and installing client', err);
             } else {
-                console.info('client pulled and installed successfully', stdout);
+                console.info('client pulled and installed successfully');
             }
+
+            console.info('STDOUT:',stdout);
+            console.info('STDERR:',stderr);
         });
     }
 
@@ -33,10 +36,13 @@ githooked('refs/heads/master', function (payload) {
         console.info('pulling and installing app...');
         exec('git pull && npm install', {cwd: __dirname}, function (err, stdout, stderr) {
             if (err) {
-                console.error('failed pulling and installing app', err, stderr);
+                console.error('failed pulling and installing app', err);
             } else {
-                console.info('app pulled and installed successfully', stdout);
+                console.info('app pulled and installed successfully');
             }
+
+            console.info('STDOUT:',stdout);
+            console.info('STDERR:',stderr);
         });
     }
 }).listen(9001);
