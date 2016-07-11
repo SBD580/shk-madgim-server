@@ -81,7 +81,7 @@ function search(query,limit){
 			return client.scroll({
 				scrollId: r._scroll_id,
 				scroll: '30s'
-			},arguments.callee);
+			}).then(arguments.callee);
 		}else{
 			return {
 				items: items,
