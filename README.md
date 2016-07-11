@@ -13,9 +13,10 @@
 ### data
 
 - **initial** `/data/initial/<time>`
-get all items existed in the specific time
+get all items existed in the specific time. Result is not limited.
+
 - **range** `/data/range/<from-time>/<to-time>`
-get all items generated between `from-time` and `to-time` (inclusive)
+get all items generated between `from-time` and `to-time` (inclusive). Result is limited by default to 50 items - a `limit` paramter can be passed in order to increase that limit
 
 ## references
 
