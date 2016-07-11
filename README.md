@@ -13,9 +13,9 @@
 ### data
 
 - **initial** `/data/initial/<time>`
-get all items exists in the specific time
+get all items existed in the specific time
 - **range** `/data/range/<from-time>/<to-time>`
-get all items generated before `from-time` and `to-time` (inclusive)
+get all items generated between `from-time` and `to-time` (inclusive)
 
 ## references
 
