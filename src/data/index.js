@@ -48,10 +48,10 @@ router.get('/initial/:time', function (req, res) {
         constant_score: {
             filter: {
                 bool: {
-                    must: {
-                        range: {startTime: {lte: req.params.time}},
-                        range: {endTime: {gt: req.params.time}}
-                    }
+                    must: [
+                        { range: {startTime: {lte: req.params.time}} },
+                        { range: {endTime: {gt: req.params.time}} }
+                    ]
                 }
             }
         }
