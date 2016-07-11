@@ -1,6 +1,6 @@
 # shk-madgim-server
 
-### how to use
+## how to use
 
 - install [nodejs]
 - clone this repository
@@ -8,7 +8,16 @@
 - get yourself a [shk-madgim-client]
 - run server: `node index.js client-location [port]` (default port to 8888)
 
-### references
+## services
+
+### data
+
+- **initial** `/data/initial/<time>`
+get all items exists in the specific time
+- **range** `/data/range/<from-time>/<to-time>`
+get all items generated before `from-time` and `to-time` (inclusive)
+
+## references
 
 - [naturalearth] has some high resolution vector maps layers
 - [tessera] is a node server for serving tiles out of mbtiles file
