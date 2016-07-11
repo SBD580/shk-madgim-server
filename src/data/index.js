@@ -14,52 +14,81 @@ var router = require('express').Router();
 router.get('/:from/:to?',function(req,res){
 	var limit = req.query.limit||50;
 	var format = req.query.format||'json';
+	search({
+		range: {
+			startTime: {
+				gte: req.params.from,
+				lte: req.params.to
+			}
+		}
+	},limit).then(function(r){
+		if(format=='geojson'){
+			res.json(turf.multiLineString(_.map(items,function(item){
+				return item.path.coordinates;
+			})));
+		}else{
+			res.json({
+				total: r.total,
+				count: r.items.length,
+				items: r.items
+			});
+		}
+	},function(err){
+		res.status(500).send(err);
+	});
+});
+
+router.get('/initial/:time',function(req,res){
+	var format = req.query.format||'json';
+	search({
+		range: {
+			startTime: {lte: req.params.time},
+			endTime: {gt: req.params.time}
+		}
+	}).then(function(r){
+		if(format=='geojson'){
+			res.json(turf.multiLineString(_.map(items,function(item){
+				return item.path.coordinates;
+			})));
+		}else{
+			res.json({
+				count: r.items.length,
+				items: r.items
+			});
+		}
+	},function(err){
+		res.status(500).send(err);
+	});
+});
+
+function search(query,limit){
 	var items = [];
-	client.search({
+	return client.search({
 		index: 'items',
 		type: 'item',
 		scroll: '30s',
 		search_type: 'scan',
 		body: {
-			query: {
-				range: {
-					startTime: {
-						gte: req.params.from,
-						lte: req.params.to
-					}
-				}
-			}
+			query: query
 		}
-	},function(err,r){
-		if(err){
-	                res.status(500).send(err);
-			return;
-		}
-
+	}).then(function(r){
 		r.hits.hits.forEach(function(hit){
-			if(items.length<limit){
+			if(!limit || items.length<limit){
 				items.push(_.assign({id:hit._id},hit._source));
 			}
 		});
-		if(r.hits.total != items.length && items.length != limit){
-			client.scroll({
+		if(r.hits.total != items.length && (!limit || items.length != limit)){
+			return client.scroll({
 				scrollId: r._scroll_id,
 				scroll: '30s'
-			},arguments.callee);	
+			},arguments.callee);
 		}else{
-			if(format=='geojson'){
-				res.json(turf.multiLineString(_.map(items,function(item){
-					return item.path.coordinates;
-				})));
-			}else{
-				res.json({
-					total: r.hits.total,
-					count: items.length,
-					items
-				});
-			}
+			return {
+				items: items,
+				total: r.hits.total
+			};
 		}
 	});
-});
+}
 
 module.exports = router;
