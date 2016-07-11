@@ -11,7 +11,7 @@ var client = new elasticsearch.Client({
 
 var router = require('express').Router();
 
-router.get('/:from/:to?',function(req,res){
+router.get('/range/:from/:to?',function(req,res){
 	var limit = req.query.limit||50;
 	var format = req.query.format||'json';
 	search({
