@@ -18,7 +18,11 @@
   "homepage": "https://github.com/SBD580/shk-madgim-server#readme",
   "dependencies": {
     "axios": "^0.12.0",
+    "bluebird": "^3.4.1",
+    "elasticsearch": "^11.0.1",
     "express": "^4.14.0",
-    "parse-coordinates": "^0.1.0"
+    "lodash": "^4.13.1",
+    "parse-coordinates": "^0.1.0",
+    "turf": "^3.0.14"
   }
 }

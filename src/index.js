@@ -20,10 +20,6 @@ app.use(express.static(clientLocation));
 // serve static files
 app.use('/static', express.static(__dirname + '/static'));
 
-app.listen(port, function () {
-    console.log('Server is up and running. Listening on port ' + port);
-});
-
 // rest handling for data sniffer
 var sampler = require('./sampler/sampler');
 
@@ -49,4 +45,11 @@ app.get('/resources/airlines', function (req, res) {
 
 app.get('/resources/airports', function (req, res) {
     sampler.airports(res);
+});
+
+// handle data requests
+app.use('/data',require('./data'));
+
+app.listen(port, function () {
+    console.log('Server is up and running. Listening on port ' + port);
 });
