@@ -27,7 +27,7 @@ all endpoints accept a `format` paramter which can accept either 'json' or 'geoj
 
 [//]:#
 
-[shk-madgim-client]: <http://https://github.com/SBD580/shk-madgim-client>
+[shk-madgim-client]: <https://github.com/SBD580/shk-madgim-client>
 [nodejs]: <https://nodejs.org/en/download/>
 [naturalearth]: <http://www.naturalearthdata.com/downloads/10m-cultural-vectors/>
 [tessera]: <https://github.com/mojodna/tessera>
