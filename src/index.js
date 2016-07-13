@@ -14,6 +14,13 @@ var port = args[1] || 8888;
 
 var app = express();
 
+// add CORS headers so local development clients could query the server
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
+
 // serve client files
 app.use(express.static(clientLocation));
 
