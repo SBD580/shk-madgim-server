@@ -28,31 +28,7 @@ app.use(express.static(clientLocation));
 app.use('/static', express.static(__dirname + '/static'));
 
 // rest handling for data sniffer
-var sampler = require('./sampler/sampler');
-
-app.get('/resources/planeFinderAircrafts', function (req, res) {
-    sampler.planeFinderAircrafts(res);
-});
-
-app.get('resources/planeFinderDetailedAircraft', function (req, res) {
-    sampler.planeFinderDetailedAircraft(res);
-});
-
-app.get('/resources/flightRadarAircrafts', function (req, res) {
-    sampler.flightRadarAircrafts(res);
-});
-
-app.get('resources/flightRadarDetailedAircraft', function (req, res) {
-    sampler.flightRadarDetailedAircraft(res);
-});
-
-app.get('/resources/airlines', function (req, res) {
-    sampler.airlines(res);
-});
-
-app.get('/resources/airports', function (req, res) {
-    sampler.airports(res);
-});
+app.use('/resources',require('./sampler'));
 
 // handle data requests
 app.use('/data',require('./data'));
