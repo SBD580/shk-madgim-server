@@ -2,7 +2,8 @@
  * Created by royif on 08/07/16.
  */
 var axios = require('axios');
-var planefinder = require('./planefinder')
+var planefinder = require('./planefinder');
+var flightradar = require('./flightradar');
 
 var get = function (url, doIfDone) {
     return axios.get(url).then(function (data) {
@@ -13,44 +14,45 @@ var get = function (url, doIfDone) {
 };
 
 // exports
-exports.planeFinderAircrafts = function (res) {
+exports.planeFinderAircrafts = function (req,res) {
     var url = 'https://planefinder.net/endpoints/update.php?callback=planeDataCallback';
     return get(url, function (data) {
         res.send(planefinder.fullPlaneData(data));
     });
 };
-//TODO
-exports.planeFinderDetailedAircraft = function (res) {
-    var url = 'https://planefinder.net/endpoints/fullPlaneData.php?callback=planePlaybackMetadataCallback&adshex=394A18&flightno=AF565&ts=1468071724&isFAA=0';
+
+exports.planeFinderDetailedAircraft = function (req,res) {
+    var url = 'https://planefinder.net/endpoints/planeData.php?callback=planePlaybackMetadataCallback&adshex='
+        + req.query.mode_s + '&flightno=' + req.query.flightno;
     return get(url, function (data) {
-        res.send(data.data);
+        res.send(planefinder.detailedPlaneData(data));
     });
 };
-//TODO
-exports.flightRadarAircrafts = function (res) {
+
+exports.flightRadarAircrafts = function (req,res) {
     var url = 'https://data-live.flightradar24.com/zones/fcgi/feed.js';
     return get(url, function (data) {
         res.send(data.data);
     });
 };
-//TODO
-exports.flightRadarDetailedAircraft = function (res) {
-    var url = 'https://data-live.flightradar24.com/clickhandler/?version=1.5&';
+
+exports.flightRadarDetailedAircraft = function (req,res) {
+    var url = 'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + req.query.idx;
     return get(url, function (data) {
         res.send(data.data);
     });
 };
-//TODO
+
 exports.airlines = function (res) {
     var url = 'http://www.flightradar24.com/_json/airlines.php';
     return get(url, function (data) {
-        res.send(data.data);
+        res.send(flightradar.airlines(data.data));
     });
 };
-//TODO
+
 exports.airports = function (res) {
     var url = 'http://www.flightradar24.com/_json/airports.php';
     return get(url, function (data) {
-        res.send(data.data);
+        res.send(flightradar.airports(data.data));
     });
 };
