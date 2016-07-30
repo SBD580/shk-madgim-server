@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 
 var args = process.argv.slice(2);
 
@@ -21,6 +22,11 @@ app.use(function(req, res, next) {
 	next();
 });
 
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 // serve client files
 app.use(express.static(clientLocation));
 
@@ -32,6 +38,12 @@ app.use('/resources',require('./sampler'));
 
 // handle data requests
 app.use('/data',require('./data'));
+
+// handle data availability requests
+app.use('/availability',require('./availability'));
+
+// handle search requests
+app.use('/search',require('./search'));
 
 app.listen(port, function () {
     console.log('Server is up and running. Listening on port ' + port);
