@@ -29,7 +29,7 @@ get all the availability records at the requested resolution (usually `<seconds>
 
 - **query** `/search`
 search the data for items answering some condition. Currently supported filters:
- - `shape` - an GeoJSON object defining a shapte (type+coordinates) which will be used to filter only items their path intersects this shape
+ - `shape` - a GeoJSON object defining a shapte (type+coordinates) which will be used to filter only items their path intersects this shape
 
 ## references
 
