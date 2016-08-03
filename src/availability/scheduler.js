@@ -5,8 +5,8 @@ var moment = require('moment')
 var args = process.argv.slice(2);
 
 var client = new elasticsearch.Client({
-    // host: 'localhost:9200',
-    host: '10.132.0.2:9200',
+    host: 'localhost:9200',
+    // host: '10.132.0.2:9200',
     requestTimeout: 200000
     //log: 'trace'
 });

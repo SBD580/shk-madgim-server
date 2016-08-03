@@ -1,17 +1,31 @@
+var commandLineArgs = require('command-line-args');
+var usage = require('command-line-usage');
+var elasticsearch = require('elasticsearch');
 var express = require('express');
 var bodyParser = require('body-parser');
 
-var args = process.argv.slice(2);
+// parse and validate options
 
-// get client location
-var clientLocation = args[0];
-if (!clientLocation) {
-    console.error('usage: index.js client-location [port]');
-    process.exit();
+var optionsDefinitions = [
+    {name: 'client', type: String, description: '(required) Path to client files for serving'},
+    {name: 'port', type: Number, defaultValue: 8888, description: 'Port to listen to'},
+    {name: 'elastic', type: String, defaultValue: 'localhost:9200', description: 'host:port for the elasticsearch instance'}
+];
+var options = commandLineArgs(optionsDefinitions);
+
+if(!options.client){
+    console.error(usage({header:'Options',optionList:optionsDefinitions}));
+    process.exit(1);
 }
 
-// get server port
-var port = args[1] || 8888;
+// generate elasticsearch client for all modules
+
+var client = new elasticsearch.Client({
+    // host: '10.132.0.2:9200',
+    host: options.elastic,
+    requestTimeout: 200000
+    //log: 'trace'
+});
 
 var app = express();
 
@@ -28,7 +42,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // serve client files
-app.use(express.static(clientLocation));
+app.use(express.static(options.client));
 
 // serve static files
 app.use('/static', express.static(__dirname + '/static'));
@@ -37,14 +51,14 @@ app.use('/static', express.static(__dirname + '/static'));
 app.use('/resources',require('./sampler'));
 
 // handle data requests
-app.use('/data',require('./data'));
+app.use('/data',require('./data')(client));
 
 // handle data availability requests
-app.use('/availability',require('./availability'));
+app.use('/availability',require('./availability')(client));
 
 // handle search requests
-app.use('/search',require('./search'));
+app.use('/search',require('./search')(client));
 
-app.listen(port, function () {
-    console.log('Server is up and running. Listening on port ' + port);
+app.listen(options.port, function () {
+    console.log('Server is up and running. Listening on port ' + options.port);
 });
