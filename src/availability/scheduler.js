@@ -1,18 +1,33 @@
+var commandLineArgs = require('command-line-args');
+var usage = require('command-line-usage');
 var elasticsearch = require('elasticsearch');
 var _ = require('lodash');
 var Promise = require('bluebird');
 var moment = require('moment')
 var args = process.argv.slice(2);
 
+// parse and validate options
+
+var optionsDefinitions = [
+    {name: 'interval', type: String, description: '(required) the interval to calculate by in seconds'},
+    {name: 'clean', type: Boolean, defaultValue: false, description: 'remove currently existing indices'},
+    {name: 'elastic', type: String, defaultValue: 'localhost:9200', description: 'host:port for the elasticsearch instance'},
+    {name: 'help', type: Boolean, description: 'print usage message and exit'}
+];
+var options = commandLineArgs(optionsDefinitions);
+
+if(options.help){
+    console.error(usage({header:'Options',optionList:optionsDefinitions}));
+    process.exit(1);
+}
+
 var client = new elasticsearch.Client({
-    host: 'localhost:9200',
-    // host: '10.132.0.2:9200',
+    host: options.elastic,
     requestTimeout: 200000
-    //log: 'trace'
 });
 
-var interval = args[0]||3600; // in seconds, 'month' is a valid value as well
-var removeExistingIndices = args[1]==='true';
+var interval = options.interval; // in seconds, 'month' is a valid value as well
+var removeExistingIndices = options.clean;
 
 var currentTime = Math.floor(Date.now()/1000);
 
