@@ -21,12 +21,6 @@ module.exports = function(client) {
                                     lte: req.params.end
                                 }
                             }
-                            // bool: {
-                            //     must: [
-                            //         {range: {time: {gte: req.params.start}}},
-                            //         {range: {time: {lte: req.params.end}}}
-                            //     ]
-                            // }
                         }:{match_all:{}}
                     }
                 }

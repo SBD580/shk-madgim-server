@@ -6,7 +6,38 @@ module.exports = function(client) {
 
     router.use('/', function (req, res) {
         var shape = req.query.shape || req.body.shape;
-        if (!shape) return res.json([]);
+        //if (!shape) return res.json({total: 0, results:[]});
+        var start = req.query.start || req.body.start;
+        var end = req.query.end || req.body.end;
+
+        var conds = [];
+        if(shape){
+            conds.push({
+                geo_shape: {
+                    path: {
+                        shape: shape
+                    }
+                }
+            });
+        }
+        if(end){
+            conds.push({
+                range: {
+                    startTime: {
+                        lte: end
+                    }
+                }
+            });
+        }
+        if(start){
+            conds.push({
+                range: {
+                    endTime: {
+                        gt: start
+                    }
+                }
+            });
+        }
 
         client.search({
             index: 'items',
@@ -15,10 +46,8 @@ module.exports = function(client) {
                 query: {
                     constant_score: {
                         filter: {
-                            geo_shape: {
-                                path: {
-                                    shape: shape
-                                }
+                            bool: {
+                                must: conds
                             }
                         }
                     }
