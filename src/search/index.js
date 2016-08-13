@@ -1,17 +1,18 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 
-module.exports = function(client) {
+module.exports = function (client) {
     var router = require('express').Router();
 
     router.use('/', function (req, res) {
         var shape = req.query.shape || req.body.shape;
-        //if (!shape) return res.json({total: 0, results:[]});
         var start = req.query.start || req.body.start;
         var end = req.query.end || req.body.end;
+        var sources = req.query.sources || req.body.sources;
+        var types = req.query.types || req.body.types;
 
         var conds = [];
-        if(shape){
+        if (shape) {
             conds.push({
                 geo_shape: {
                     path: {
@@ -20,7 +21,7 @@ module.exports = function(client) {
                 }
             });
         }
-        if(end){
+        if (end) {
             conds.push({
                 range: {
                     startTime: {
@@ -29,7 +30,7 @@ module.exports = function(client) {
                 }
             });
         }
-        if(start){
+        if (start) {
             conds.push({
                 range: {
                     endTime: {
@@ -38,18 +39,20 @@ module.exports = function(client) {
                 }
             });
         }
+        if (sources && sources.length) {
+            conds.push({terms: {src: sources}});
+        }
+        if (types && types.length) {
+            conds.push({terms: {type: types}});
+        }
 
         client.search({
             index: 'items',
             type: 'item',
             body: {
                 query: {
-                    constant_score: {
-                        filter: {
-                            bool: {
-                                must: conds
-                            }
-                        }
+                    bool: {
+                        filter: conds
                     }
                 }
             }
