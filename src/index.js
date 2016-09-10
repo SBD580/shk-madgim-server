@@ -28,7 +28,7 @@ app.use(express.static(clientLocation));
 app.use('/static', express.static(__dirname + '/static'));
 
 // rest handling for data sniffer
-app.use('/resources',require('./sampler'));
+app.use('/r',require('./sampler'));
 
 // handle data requests
 app.use('/data',require('./data'));
