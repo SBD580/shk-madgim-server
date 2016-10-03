@@ -2,18 +2,25 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var turf = require('turf');
 
-module.exports = function(client) {
+module.exports = function (client) {
     var router = require('express').Router();
 
     router.get('/range/:from/:to?', function (req, res) {
         var limit = req.query.limit || 50;
         var format = req.query.format || 'json';
+        var type = req.query.type || 'started';
+
         search({
             constant_score: {
                 filter: {
-                    range: {
+                    range: type == 'started' ? {
                         startTime: {
-                            gte: req.params.from,
+                            gt: req.params.from,
+                            lte: req.params.to
+                        }
+                    } : {
+                        endTime: {
+                            gt: req.params.from,
                             lte: req.params.to
                         }
                     }

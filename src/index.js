@@ -44,6 +44,9 @@ app.use(bodyParser.urlencoded({
 // serve client files
 app.use(express.static(options.client));
 
+// serve client node modules files (hack, should be part of a build process at the client)
+app.use('/lib', express.static(options.client+'/../node_modules'));
+
 // serve static files
 app.use('/static', express.static(__dirname + '/static'));
 
