@@ -9,9 +9,15 @@ var bodyParser = require('body-parser');
 var optionsDefinitions = [
     {name: 'client', type: String, description: '(required) Path to client files for serving'},
     {name: 'port', type: Number, defaultValue: 8888, description: 'Port to listen to'},
-    {name: 'elastic', type: String, defaultValue: 'localhost:9200', description: 'host:port for the elasticsearch instance'}
+    {name: 'elastic', type: String, defaultValue: 'localhost:9200', description: 'host:port for the elasticsearch instance'},
+    {name: 'help', type: Boolean, defaultValue: false, description: 'print usage message and exit'}
 ];
 var options = commandLineArgs(optionsDefinitions);
+
+if(options.help){
+    console.log(usage({header:'Options',optionList:optionsDefinitions}));
+    process.exit(0);
+}
 
 if(!options.client){
     console.error(usage({header:'Options',optionList:optionsDefinitions}));
@@ -21,10 +27,8 @@ if(!options.client){
 // generate elasticsearch client for all modules
 
 var client = new elasticsearch.Client({
-    // host: '10.132.0.2:9200',
     host: options.elastic,
     requestTimeout: 200000
-    //log: 'trace'
 });
 
 var app = express();
