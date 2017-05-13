@@ -4,7 +4,7 @@
 
 - install [nodejs]
 - clone this repository
-- run `node install` while in 'src' directory
+- run `npm install` while in 'src' directory
 - get yourself a [shk-madgim-client]
 - run server: `npm start -- --client <client-location> --port <port>` (default port to 8888)
 
